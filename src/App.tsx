@@ -1,9 +1,11 @@
-import { Container, Typography, Box, Paper } from "@mui/material";
+import { Container, Typography, Box, Paper, Divider } from "@mui/material";
 import Link from "@mui/material/Link";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import SearchBar from "./components/SearchBar";
 import ResultList from "./components/ResultList";
 import styled from "styled-components";
 import gitHubLogo from "./assets/images/Octocat.jpg";
+import placeholderImage from "./assets/images/placeholder.jpg";
 
 function Copyright() {
   return (
@@ -19,7 +21,15 @@ function Copyright() {
 
 export default function App() {
   return (
-    <Container maxWidth="sm">
+    <Container
+      maxWidth="lg"
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        height: "100vh",
+      }}
+    >
       <SCWrapper elevation={6}>
         <Box
           sx={{ marginBottom: "20px", textAlign: "center" }}
@@ -35,9 +45,16 @@ export default function App() {
           </Typography>
           <SCLogo src={gitHubLogo} alt="GitHub Octocat" />
         </Box>
+        <Divider
+          variant="fullWidth"
+          orientation="vertical"
+          flexItem
+          sx={{ display: { xs: "none", lg: "initial" } }}
+        />
         <SCMain>
           <SearchBar />
-          <ResultList />
+          <SCPlaceholderImage src={placeholderImage} alt="placeholder image" />
+          {/* <ResultList /> */}
         </SCMain>
       </SCWrapper>
       <Copyright />
@@ -47,14 +64,27 @@ export default function App() {
 
 const SCWrapper = styled(Paper)`
   min-height: 60vh;
-  margin-top: 5vh;
   padding: 45px 35px 25px 35px;
   margin-bottom: 25px;
+
+  @media screen and (min-width: 1200px) {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+  }
 ` as typeof Paper;
 
 const SCLogo = styled.img`
   max-width: 100%;
   max-height: 80px;
+`;
+
+const SCPlaceholderImage = styled(SCLogo)`
+  max-height: 50vh;
+  border-radius: 8px;
+  margin: 25px 0;
+  box-shadow: rgba(136, 165, 191, 0.48) 6px 2px 16px 0px,
+    rgba(255, 255, 255, 0.8) -6px -2px 16px 0px;
 `;
 
 const SCMain = styled.main`

@@ -10,7 +10,7 @@ import styled from "styled-components";
 export default function SearchBar() {
   return (
     <SCForm>
-      <TextField
+      <SCTextField
         id="primary-search"
         variant="outlined"
         type="search"
@@ -23,13 +23,12 @@ export default function SearchBar() {
           ),
           "aria-label": "search",
         }}
-        fullWidth
         placeholder="Search Github users or organizations"
       />
       <SCButton type="submit" variant="contained">
         Search
       </SCButton>
-      <FormControl fullWidth>
+      <SCFormControlRadioGroup fullWidth>
         <RadioGroup
           aria-labelledby="radio-buttons-group-label"
           defaultValue="user"
@@ -47,7 +46,7 @@ export default function SearchBar() {
             label="Organization"
           />
         </RadioGroup>
-      </FormControl>
+      </SCFormControlRadioGroup>
     </SCForm>
   );
 }
@@ -59,10 +58,36 @@ const SCForm = styled.form`
   flex-direction: column;
   align-items: center;
   gap: 10px;
+
+  @media screen and (min-width: 1200px) {
+    margin-top: 50px;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+`;
+
+const SCTextField = styled(TextField)`
+  width: 100%;
+  @media screen and (min-width: 1200px) {
+    order: 1;
+    flex: 3 1 0;
+  }
+`;
+
+const SCFormControlRadioGroup = styled(FormControl)`
+  @media screen and (min-width: 1200px) {
+    order: 3;
+  }
 `;
 
 const SCButton = styled(Button)`
   width: 35%;
   max-width: 150px;
+  height: 40px;
   order: 2;
+
+  @media screen and (min-width: 1200px) {
+    height: 50px;
+    flex: 1 1 0;
+  }
 ` as typeof Button;
