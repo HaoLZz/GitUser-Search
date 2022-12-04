@@ -13,7 +13,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "latest",
-    "styled-components": "latest"
+    "styled-components": "latest",
+    "swr": "^1.3.0"
   },
   "scripts": {
     "tsc": "./node_modules/.bin/tsc",

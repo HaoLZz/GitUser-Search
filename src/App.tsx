@@ -1,6 +1,6 @@
+import { useState } from "react";
 import { Container, Typography, Box, Paper, Divider } from "@mui/material";
 import Link from "@mui/material/Link";
-import useMediaQuery from "@mui/material/useMediaQuery";
 import SearchBar from "./components/SearchBar";
 import ResultList from "./components/ResultList";
 import styled from "styled-components";
@@ -20,6 +20,9 @@ function Copyright() {
 }
 
 export default function App() {
+  const [query, setQuery] = useState("");
+  const [pageIndex, setPageIndex] = useState(1);
+
   return (
     <Container
       maxWidth="lg"
@@ -52,9 +55,25 @@ export default function App() {
           sx={{ display: { xs: "none", lg: "initial" } }}
         />
         <SCMain>
-          <SearchBar />
-          <SCPlaceholderImage src={placeholderImage} alt="placeholder image" />
-          {/* <ResultList /> */}
+          <SearchBar setQuery={setQuery} />
+          {!query && (
+            <SCPlaceholderImage
+              src={placeholderImage}
+              alt="placeholder image"
+            />
+          )}
+          <ResultList
+            query={query}
+            pageIndex={pageIndex}
+            setPageIndex={setPageIndex}
+          />
+          <Box sx={{ display: "none" }}>
+            <ResultList
+              query={query}
+              pageIndex={pageIndex + 1}
+              setPageIndex={setPageIndex}
+            />
+          </Box>
         </SCMain>
       </SCWrapper>
       <Copyright />

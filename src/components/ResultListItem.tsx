@@ -1,21 +1,22 @@
 import styled from "styled-components";
-import { Typography, Box, Card, IconButton } from "@mui/material";
+import { Typography, Box, Card, IconButton, Link } from "@mui/material";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
 import OpenInNewOutlinedIcon from "@mui/icons-material/OpenInNewOutlined";
+import { User } from "../interface/data";
 
-export default function ResultListItem() {
+export default function ResultListItem({ user }: { user: User }) {
   return (
     <ListItem alignItems="flex-start">
       <ListItemButton>
         <ListItemAvatar>
-          <Avatar alt={`github user avatar`} />
+          <Avatar src={user.avatar_url} alt={`github user avatar`} />
         </ListItemAvatar>
         <ListItemText
-          primary={`GitHub User`}
+          primary={`${user.login}`}
           secondary={
             <>
               <Typography
@@ -24,16 +25,18 @@ export default function ResultListItem() {
                 variant="body2"
                 color="text.primary"
               >
-                User Name
+                {`GitHub ${user.type}`}
               </Typography>
 
               {" — Other info …"}
             </>
           }
         />
-        <IconButton>
-          <OpenInNewOutlinedIcon />
-        </IconButton>
+        <Link href={user.html_url} target="_blank" rel="noreferrer">
+          <IconButton>
+            <OpenInNewOutlinedIcon />
+          </IconButton>
+        </Link>
       </ListItemButton>
     </ListItem>
   );

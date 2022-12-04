@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import { TextField, InputAdornment, Button } from "@mui/material";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
@@ -7,14 +8,50 @@ import FormLabel from "@mui/material/FormLabel";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import styled from "styled-components";
 
-export default function SearchBar() {
+interface SearchBarProps {
+  setQuery: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export default function SearchBar({ setQuery }: SearchBarProps) {
+  // Search form states
+  const [searchText, setSearchText] = useState("");
+  const [searchType, setSearchType] = useState("user");
+  const [errorMsg, setErrorMsg] = useState("");
+
+  const handleSearchTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchText(e.target.value);
+    setErrorMsg("");
+  };
+  const handleSearchTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchType(e.target.value);
+  };
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setErrorMsg("");
+    // Form validation
+    if (!searchText) {
+      setErrorMsg("Search input is empty");
+    } else if (searchText.length > 100) {
+      setErrorMsg("Search input must be shorter than 100 characters");
+    } else if (searchType !== "user" && searchType !== "organization") {
+      setErrorMsg("Please select a search type below");
+    } else {
+      // Trigger data fetching
+      setQuery(`${searchText}+type:${searchType}`);
+    }
+  };
+
   return (
-    <SCForm>
+    <SCForm onSubmit={handleSubmit}>
       <SCTextField
         id="primary-search"
         variant="outlined"
         type="search"
+        value={searchText}
+        onChange={handleSearchTextChange}
         autoFocus
+        error={!!errorMsg}
+        helperText={errorMsg || " "}
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
@@ -31,8 +68,9 @@ export default function SearchBar() {
       <SCFormControlRadioGroup fullWidth>
         <RadioGroup
           aria-labelledby="radio-buttons-group-label"
-          defaultValue="user"
           name="radio-buttons-group"
+          value={searchType}
+          onChange={handleSearchTypeChange}
           sx={{
             display: "flex",
             flexDirection: "row",
@@ -63,6 +101,7 @@ const SCForm = styled.form`
     margin-top: 50px;
     flex-direction: row;
     flex-wrap: wrap;
+    align-items: flex-start;
   }
 `;
 
@@ -87,7 +126,7 @@ const SCButton = styled(Button)`
   order: 2;
 
   @media screen and (min-width: 1200px) {
-    height: 50px;
+    height: 56px;
     flex: 1 1 0;
   }
 ` as typeof Button;
