@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Container, Typography, Box, Paper, Divider } from "@mui/material";
 import Link from "@mui/material/Link";
+import Pagination from "@mui/material/Pagination";
 import SearchBar from "./components/SearchBar";
 import ResultList from "./components/ResultList";
 import styled from "styled-components";
@@ -19,9 +20,27 @@ function Copyright() {
   );
 }
 
+const DEFAULT_PER_PAGE = 10;
+const MAXIMUM_PAGE_INDEX = 100;
+
 export default function App() {
   const [query, setQuery] = useState("");
   const [pageIndex, setPageIndex] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
+    // MAXIMUM_PAGE_INDEX = 100
+    setPageIndex(Math.min(value, MAXIMUM_PAGE_INDEX));
+  };
+
+  const totalPageCount = Math.min(
+    Math.ceil(totalPages / DEFAULT_PER_PAGE),
+    MAXIMUM_PAGE_INDEX
+  );
+  console.log("total page", totalPageCount);
 
   return (
     <Container
@@ -56,24 +75,34 @@ export default function App() {
         />
         <SCMain>
           <SearchBar setQuery={setQuery} setPageIndex={setPageIndex} />
-          {!query && (
+          {!query ? (
             <SCPlaceholderImage
               src={placeholderImage}
               alt="placeholder image"
             />
+          ) : (
+            <>
+              <ResultList
+                query={query}
+                pageIndex={pageIndex}
+                setTotalPages={setTotalPages}
+              />
+              <Pagination
+                count={totalPageCount}
+                page={pageIndex}
+                onChange={handlePageChange}
+                variant="outlined"
+                color="primary"
+              />
+              <Box sx={{ display: "none" }}>
+                <ResultList
+                  query={query}
+                  pageIndex={pageIndex + 1}
+                  setTotalPages={setTotalPages}
+                />
+              </Box>
+            </>
           )}
-          <ResultList
-            query={query}
-            pageIndex={pageIndex}
-            setPageIndex={setPageIndex}
-          />
-          <Box sx={{ display: "none" }}>
-            <ResultList
-              query={query}
-              pageIndex={pageIndex + 1}
-              setPageIndex={setPageIndex}
-            />
-          </Box>
         </SCMain>
       </SCWrapper>
       <Copyright />

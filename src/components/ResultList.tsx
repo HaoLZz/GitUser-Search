@@ -1,24 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Typography, Box, Divider } from "@mui/material";
 import List from "@mui/material/List";
-import Pagination from "@mui/material/Pagination";
 import ResultListItem from "./ResultListItem";
+import ResultListSkeleton from "./ResultListSkeleton";
 import useFetch from "../hooks/useFetch";
 
 interface ResultListProps {
   query: string;
   pageIndex: number;
-  setPageIndex: React.Dispatch<React.SetStateAction<number>>;
+  setTotalPages: React.Dispatch<React.SetStateAction<number>>;
 }
+
+const DEFAULT_PER_PAGE = 10;
+const MAXIMUM_PAGE_INDEX = 100;
 
 export default function ResultList({
   query,
   pageIndex,
-  setPageIndex,
+  setTotalPages,
 }: ResultListProps) {
-  const DEFAULT_PER_PAGE = 10;
-  const MAXIMUM_PAGE_INDEX = 100;
   // Guard against invalid pageIndex
   // Github search only allow query first 1000 results
   const currentPage =
@@ -33,12 +34,32 @@ export default function ResultList({
 
   console.log(users, isError);
 
+  // after data fetching, if total_count changes, then update totalPages state in App
+  useEffect(() => {
+    if (!!users && users.total_count > 0) {
+      setTotalPages(users.total_count);
+    }
+  }, [users?.total_count]);
+
   if (isError) {
     return <>{JSON.stringify(error)}</>;
   }
 
   if (isLoading) {
-    return <>Skeleton List</>;
+    return (
+      <List
+        sx={{
+          width: "100%",
+          bgcolor: "background.paper",
+          height: "50vh",
+          overflowY: "auto",
+          marginBottom: "20px",
+        }}
+        dense
+      >
+        <ResultListSkeleton totalNum={DEFAULT_PER_PAGE} />
+      </List>
+    );
   }
 
   if (!users) {
@@ -48,20 +69,6 @@ export default function ResultList({
   if (users.items?.length === 0) {
     return <>No result found</>;
   }
-
-  const totalPageCount = Math.min(
-    Math.ceil(users.total_count / DEFAULT_PER_PAGE),
-    MAXIMUM_PAGE_INDEX
-  );
-
-  const handlePageChange = (
-    event: React.ChangeEvent<unknown>,
-    value: number
-  ) => {
-    // MAXIMUM_PAGE_INDEX = 100
-    setPageIndex(Math.min(value, MAXIMUM_PAGE_INDEX));
-  };
-  console.log("total page", totalPageCount);
   return (
     <>
       <List
@@ -83,13 +90,6 @@ export default function ResultList({
           );
         })}
       </List>
-      <Pagination
-        count={totalPageCount}
-        page={pageIndex}
-        onChange={handlePageChange}
-        variant="outlined"
-        color="primary"
-      />
     </>
   );
 }

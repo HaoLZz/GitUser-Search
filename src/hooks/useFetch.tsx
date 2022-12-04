@@ -23,7 +23,9 @@ export default function useFetch(queryString: string) {
   const { data, error, isValidating } = useSWR<
     ResponseUserSearch,
     ResponseError
-  >(() => (queryString ? queryString : null), fetcher);
+  >(() => (queryString ? queryString : null), fetcher, {
+    revalidateIfStale: false,
+  });
 
   return {
     data,
