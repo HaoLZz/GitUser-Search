@@ -18,11 +18,28 @@ export default function ResultList({
   setPageIndex,
 }: ResultListProps) {
   const DEFAULT_PER_PAGE = 10;
+  const MAXIMUM_PAGE_INDEX = 100;
+  // Guard against invalid pageIndex
+  // Github search only allow query first 1000 results
+  const currentPage =
+    typeof pageIndex !== "number" || Number.isNaN(pageIndex) || pageIndex <= 0
+      ? 1
+      : Math.min(pageIndex, MAXIMUM_PAGE_INDEX);
   const queryString = query
-    ? `${process.env.REACT_APP_API_BASE_URL}?q=${query}&page=${pageIndex}&per_page=${DEFAULT_PER_PAGE}`
+    ? `${process.env.REACT_APP_API_BASE_URL}?q=${query}&page=${currentPage}&per_page=${DEFAULT_PER_PAGE}`
     : "";
 
   const { data: users, isLoading, isError, error } = useFetch(queryString);
+
+  console.log(users, isError);
+
+  if (isError) {
+    return <>{JSON.stringify(error)}</>;
+  }
+
+  if (isLoading) {
+    return <>Skeleton List</>;
+  }
 
   if (!users) {
     return null;
@@ -32,11 +49,18 @@ export default function ResultList({
     return <>No result found</>;
   }
 
-  if (isLoading) {
-    return <>Skeleton List</>;
-  }
+  const totalPageCount = Math.min(
+    Math.ceil(users.total_count / DEFAULT_PER_PAGE),
+    MAXIMUM_PAGE_INDEX
+  );
 
-  const totalPageCount = Math.floor(users.total_count / DEFAULT_PER_PAGE);
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
+    // MAXIMUM_PAGE_INDEX = 100
+    setPageIndex(Math.min(value, MAXIMUM_PAGE_INDEX));
+  };
   console.log("total page", totalPageCount);
   return (
     <>
@@ -59,7 +83,13 @@ export default function ResultList({
           );
         })}
       </List>
-      <Pagination count={totalPageCount} variant="outlined" color="primary" />
+      <Pagination
+        count={totalPageCount}
+        page={pageIndex}
+        onChange={handlePageChange}
+        variant="outlined"
+        color="primary"
+      />
     </>
   );
 }

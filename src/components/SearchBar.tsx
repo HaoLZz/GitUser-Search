@@ -10,9 +10,10 @@ import styled from "styled-components";
 
 interface SearchBarProps {
   setQuery: React.Dispatch<React.SetStateAction<string>>;
+  setPageIndex: React.Dispatch<React.SetStateAction<number>>;
 }
 
-export default function SearchBar({ setQuery }: SearchBarProps) {
+export default function SearchBar({ setQuery, setPageIndex }: SearchBarProps) {
   // Search form states
   const [searchText, setSearchText] = useState("");
   const [searchType, setSearchType] = useState("user");
@@ -36,7 +37,8 @@ export default function SearchBar({ setQuery }: SearchBarProps) {
     } else if (searchType !== "user" && searchType !== "organization") {
       setErrorMsg("Please select a search type below");
     } else {
-      // Trigger data fetching
+      // Trigger data fetching and reset page index
+      setPageIndex(1);
       setQuery(`${searchText}+type:${searchType}`);
     }
   };

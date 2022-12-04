@@ -25,3 +25,8 @@ export interface ResponseUserSearch {
   incomplete_results: boolean;
   items: User[];
 }
+
+export interface ResponseError extends Error {
+  info: string;
+  status: number;
+}

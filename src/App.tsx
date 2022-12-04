@@ -55,7 +55,7 @@ export default function App() {
           sx={{ display: { xs: "none", lg: "initial" } }}
         />
         <SCMain>
-          <SearchBar setQuery={setQuery} />
+          <SearchBar setQuery={setQuery} setPageIndex={setPageIndex} />
           {!query && (
             <SCPlaceholderImage
               src={placeholderImage}
