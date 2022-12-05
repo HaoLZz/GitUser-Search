@@ -7,11 +7,12 @@ import ErrorOutlineOutlinedIcon from "@mui/icons-material/ErrorOutlineOutlined";
 import ResultListItem from "./ResultListItem";
 import ResultListSkeleton from "./ResultListSkeleton";
 import useFetch from "../hooks/useFetch";
+import gitHubMarks from "../assets/images/GitHub-Marks.png";
 
 function ErrorMessage({ query }: { query: string }) {
   const { mutate: refetch } = useSWRConfig();
   return (
-    <SCError>
+    <SCMessage>
       <Typography
         variant="h5"
         component="h6"
@@ -26,7 +27,22 @@ function ErrorMessage({ query }: { query: string }) {
       <SCButton variant="outlined" color="error" onClick={() => refetch(query)}>
         Retry
       </SCButton>
-    </SCError>
+    </SCMessage>
+  );
+}
+
+function EmptyResultMessage() {
+  return (
+    <SCMessage>
+      <Typography
+        variant="h5"
+        component="h6"
+        sx={{ fontStyle: "italic", my: 3, width: "100%", textAlign: "center" }}
+      >
+        Sorry, no result found
+      </Typography>
+      <SCEmptyResultImage src={gitHubMarks} alt="git-hub-marks" />
+    </SCMessage>
   );
 }
 
@@ -60,8 +76,8 @@ export default function ResultList({
 
   // after data fetching, if total_count changes, then update totalPages state in App
   useEffect(() => {
-    if (!!users && users.total_count > 0) {
-      setTotalPages(users.total_count);
+    if (!!users && users.total_count >= 0) {
+      setTotalPages(users.total_count || 1);
     }
   }, [users?.total_count]);
 
@@ -95,7 +111,7 @@ export default function ResultList({
   }
 
   if (users.items?.length === 0) {
-    return <>No result found</>;
+    return <EmptyResultMessage />;
   }
   return (
     <>
@@ -122,7 +138,7 @@ export default function ResultList({
   );
 }
 
-const SCError = styled.div`
+const SCMessage = styled.div`
   width: 100%;
   height: 50vh;
   border-radius: 8px;
@@ -133,6 +149,12 @@ const SCError = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+`;
+
+const SCEmptyResultImage = styled.img`
+  max-width: 100%;
+  max-height: 30vh;
+  border-radius: 8px;
 `;
 
 const SCButton = styled(Button)`
