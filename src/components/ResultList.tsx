@@ -1,10 +1,34 @@
 import React, { useState, useEffect } from "react";
+import { useSWRConfig } from "swr";
 import styled from "styled-components";
-import { Typography, Box, Divider } from "@mui/material";
+import { Typography, Box, Button, Divider } from "@mui/material";
 import List from "@mui/material/List";
+import ErrorOutlineOutlinedIcon from "@mui/icons-material/ErrorOutlineOutlined";
 import ResultListItem from "./ResultListItem";
 import ResultListSkeleton from "./ResultListSkeleton";
 import useFetch from "../hooks/useFetch";
+
+function ErrorMessage({ query }: { query: string }) {
+  const { mutate: refetch } = useSWRConfig();
+  return (
+    <SCError>
+      <Typography
+        variant="h5"
+        component="h6"
+        sx={{ fontStyle: "italic", my: 3, width: "100%", textAlign: "center" }}
+      >
+        Oops, something went wrong
+      </Typography>
+      <ErrorOutlineOutlinedIcon
+        color="error"
+        sx={{ fontSize: " 2.5rem", marginBottom: "15px" }}
+      />
+      <SCButton variant="outlined" color="error" onClick={() => refetch(query)}>
+        Retry
+      </SCButton>
+    </SCError>
+  );
+}
 
 interface ResultListProps {
   query: string;
@@ -42,7 +66,11 @@ export default function ResultList({
   }, [users?.total_count]);
 
   if (isError) {
-    return <>{JSON.stringify(error)}</>;
+    return (
+      <>
+        <ErrorMessage query={queryString} />
+      </>
+    );
   }
 
   if (isLoading) {
@@ -93,3 +121,21 @@ export default function ResultList({
     </>
   );
 }
+
+const SCError = styled.div`
+  width: 100%;
+  height: 50vh;
+  border-radius: 8px;
+  margin: 25px 0;
+  box-shadow: rgba(17, 17, 26, 0.1) 0px 0px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+const SCButton = styled(Button)`
+  width: 150px;
+  height: 40px;
+` as typeof Button;
