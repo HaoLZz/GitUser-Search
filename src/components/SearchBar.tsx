@@ -7,24 +7,25 @@ import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import styled from "styled-components";
+import useUrlState from "../hooks/useUrlState";
 
 interface SearchBarProps {
-  setQuery: React.Dispatch<React.SetStateAction<string>>;
-  setPageIndex: React.Dispatch<React.SetStateAction<number>>;
+  setShouldFetch: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function SearchBar({ setQuery, setPageIndex }: SearchBarProps) {
+export default function SearchBar({ setShouldFetch }: SearchBarProps) {
   // Search form states
-  const [searchText, setSearchText] = useState("");
-  const [searchType, setSearchType] = useState("user");
+  const { query: searchText, searchType, updateUrlState } = useUrlState();
+
   const [errorMsg, setErrorMsg] = useState("");
 
   const handleSearchTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchText(e.target.value);
+    updateUrlState(e.target.value, { page: "", totalPages: "", type: "" });
     setErrorMsg("");
+    setShouldFetch(false);
   };
   const handleSearchTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchType(e.target.value);
+    updateUrlState(undefined, { type: e.target.value });
   };
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -38,8 +39,8 @@ export default function SearchBar({ setQuery, setPageIndex }: SearchBarProps) {
       setErrorMsg("Please select a search type below");
     } else {
       // Trigger data fetching and reset page index
-      setPageIndex(1);
-      setQuery(`${searchText}+type:${searchType}`);
+      updateUrlState(undefined, { page: "1", type: searchType });
+      setShouldFetch(true);
     }
   };
 
@@ -47,6 +48,7 @@ export default function SearchBar({ setQuery, setPageIndex }: SearchBarProps) {
     <SCForm onSubmit={handleSubmit}>
       <SCTextField
         id="primary-search"
+        name="primary-search"
         variant="outlined"
         type="search"
         value={searchText}

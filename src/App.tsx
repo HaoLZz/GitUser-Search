@@ -4,6 +4,7 @@ import Link from "@mui/material/Link";
 import Pagination from "@mui/material/Pagination";
 import SearchBar from "./components/SearchBar";
 import ResultList from "./components/ResultList";
+import useUrlState from "./hooks/useUrlState";
 import styled from "styled-components";
 import gitHubLogo from "./assets/images/Octocat.jpg";
 import placeholderImage from "./assets/images/placeholder.jpg";
@@ -20,27 +21,22 @@ function Copyright() {
   );
 }
 
-const DEFAULT_PER_PAGE = 10;
 const MAXIMUM_PAGE_INDEX = 100;
 
 export default function App() {
-  const [query, setQuery] = useState("");
-  const [pageIndex, setPageIndex] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const { pageIndex, totalPages, updateUrlState } = useUrlState();
+
+  const [shouldFetch, setShouldFetch] = useState(false);
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
     // MAXIMUM_PAGE_INDEX = 100
-    setPageIndex(Math.min(value, MAXIMUM_PAGE_INDEX));
+    updateUrlState(undefined, {
+      page: String(Math.min(value, MAXIMUM_PAGE_INDEX)),
+    });
   };
-
-  const totalPageCount = Math.min(
-    Math.ceil(totalPages / DEFAULT_PER_PAGE),
-    MAXIMUM_PAGE_INDEX
-  );
-  console.log("total page", totalPageCount);
 
   return (
     <Container
@@ -74,21 +70,17 @@ export default function App() {
           sx={{ display: { xs: "none", lg: "initial" } }}
         />
         <SCMain>
-          <SearchBar setQuery={setQuery} setPageIndex={setPageIndex} />
-          {!query ? (
+          <SearchBar setShouldFetch={setShouldFetch} />
+          {!shouldFetch ? (
             <SCPlaceholderImage
               src={placeholderImage}
               alt="placeholder image"
             />
           ) : (
             <>
-              <ResultList
-                query={query}
-                pageIndex={pageIndex}
-                setTotalPages={setTotalPages}
-              />
+              <ResultList pageIndex={pageIndex} shouldFetch={shouldFetch} />
               <Pagination
-                count={totalPageCount}
+                count={totalPages}
                 page={pageIndex}
                 onChange={handlePageChange}
                 variant="outlined"
@@ -96,9 +88,8 @@ export default function App() {
               />
               <Box sx={{ display: "none" }}>
                 <ResultList
-                  query={query}
                   pageIndex={pageIndex + 1}
-                  setTotalPages={setTotalPages}
+                  shouldFetch={shouldFetch}
                 />
               </Box>
             </>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useSWRConfig } from "swr";
 import styled from "styled-components";
 import { Typography, Box, Button, Divider } from "@mui/material";
@@ -7,6 +7,7 @@ import ErrorOutlineOutlinedIcon from "@mui/icons-material/ErrorOutlineOutlined";
 import ResultListItem from "./ResultListItem";
 import ResultListSkeleton from "./ResultListSkeleton";
 import useFetch from "../hooks/useFetch";
+import useUrlState from "../hooks/useUrlState";
 import gitHubMarks from "../assets/images/GitHub-Marks.png";
 
 function ErrorMessage({ query }: { query: string }) {
@@ -47,37 +48,39 @@ function EmptyResultMessage() {
 }
 
 interface ResultListProps {
-  query: string;
   pageIndex: number;
-  setTotalPages: React.Dispatch<React.SetStateAction<number>>;
+  shouldFetch: boolean;
 }
 
 const DEFAULT_PER_PAGE = 10;
 const MAXIMUM_PAGE_INDEX = 100;
 
 export default function ResultList({
-  query,
   pageIndex,
-  setTotalPages,
+  shouldFetch,
 }: ResultListProps) {
+  const { query, searchType, updateUrlState } = useUrlState();
+
   // Guard against invalid pageIndex
   // Github search only allow query first 1000 results
   const currentPage =
     typeof pageIndex !== "number" || Number.isNaN(pageIndex) || pageIndex <= 0
       ? 1
       : Math.min(pageIndex, MAXIMUM_PAGE_INDEX);
-  const queryString = query
-    ? `${process.env.REACT_APP_API_BASE_URL}?q=${query}&page=${currentPage}&per_page=${DEFAULT_PER_PAGE}`
+  const queryString = shouldFetch
+    ? `${process.env.REACT_APP_API_BASE_URL}?q=${query}+type:${searchType}&page=${currentPage}&per_page=${DEFAULT_PER_PAGE}`
     : "";
 
-  const { data: users, isLoading, isError, error } = useFetch(queryString);
-
-  console.log(users, isError);
+  const { data: users, isLoading, isError } = useFetch(queryString);
 
   // after data fetching, if total_count changes, then update totalPages state in App
   useEffect(() => {
     if (!!users && users.total_count >= 0) {
-      setTotalPages(users.total_count || 1);
+      const totalPageCount = Math.min(
+        Math.ceil((users.total_count || 1) / DEFAULT_PER_PAGE),
+        MAXIMUM_PAGE_INDEX
+      );
+      updateUrlState(undefined, { totalPages: String(totalPageCount) });
     }
   }, [users?.total_count]);
 
