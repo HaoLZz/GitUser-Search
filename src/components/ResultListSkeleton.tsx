@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 function ListItemSkeleton() {
   return (
     <Box
+      data-cy={"skeleton-item"}
       sx={{
         height: "65px",
         display: "flex",
@@ -28,7 +29,11 @@ function ListItemSkeleton() {
   );
 }
 
-export default function ResultListSkeleton({ totalNum }: { totalNum: number }) {
+export default function ResultListSkeleton({
+  totalNum = 10,
+}: {
+  totalNum?: number;
+}) {
   const contentToRender = Array.from(
     { length: totalNum },
     (_, i: number) => i

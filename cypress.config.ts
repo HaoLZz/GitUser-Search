@@ -16,7 +16,7 @@ export default defineConfig({
     },
     specPattern: [
       "**/**/*.comp-spec.{js,ts,jsx,tsx}",
-      "**/**/*.cy.{js,ts,jsx,tsx}",
+      "src/**/*.cy.{js,ts,jsx,tsx}",
     ],
   },
 });
