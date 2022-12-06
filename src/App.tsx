@@ -58,10 +58,11 @@ export default function App() {
             component="h1"
             sx={{ fontSize: { xs: "1.5rem", sm: "1.8rem", md: "2.5rem" } }}
             gutterBottom
+            data-cy="header-text"
           >
             GitUser Search
           </Typography>
-          <SCLogo src={gitHubLogo} alt="GitHub Octocat" />
+          <SCLogo src={gitHubLogo} alt="GitHub Octocat" data-cy="header-logo" />
         </Box>
         <Divider
           variant="fullWidth"
@@ -75,6 +76,7 @@ export default function App() {
             <SCPlaceholderImage
               src={placeholderImage}
               alt="placeholder image"
+              data-cy="placeholder-image"
             />
           ) : (
             <>
@@ -96,7 +98,9 @@ export default function App() {
           )}
         </SCMain>
       </SCWrapper>
-      <Copyright />
+      <footer data-cy="search-footer">
+        <Copyright />
+      </footer>
     </Container>
   );
 }

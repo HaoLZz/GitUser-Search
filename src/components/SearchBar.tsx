@@ -45,7 +45,7 @@ export default function SearchBar({ setShouldFetch }: SearchBarProps) {
   };
 
   return (
-    <SCForm onSubmit={handleSubmit}>
+    <SCForm onSubmit={handleSubmit} data-cy="search-form">
       <SCTextField
         id="primary-search"
         name="primary-search"
@@ -66,7 +66,7 @@ export default function SearchBar({ setShouldFetch }: SearchBarProps) {
         }}
         placeholder="Search Github users or organizations"
       />
-      <SCButton type="submit" variant="contained">
+      <SCButton type="submit" variant="contained" data-cy="search-button">
         Search
       </SCButton>
       <SCFormControlRadioGroup fullWidth>
@@ -80,11 +80,16 @@ export default function SearchBar({ setShouldFetch }: SearchBarProps) {
             flexDirection: "row",
             justifyContent: "center",
           }}
+          data-cy="search-radio-group"
         >
-          <FormControlLabel value="user" control={<Radio />} label="User" />
+          <FormControlLabel
+            value="user"
+            control={<Radio name="user" />}
+            label="User"
+          />
           <FormControlLabel
             value="organization"
-            control={<Radio />}
+            control={<Radio name="organization" />}
             label="Organization"
           />
         </RadioGroup>

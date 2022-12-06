@@ -105,6 +105,7 @@ export default function ResultList({
           marginBottom: "20px",
         }}
         dense
+        data-cy="result-list"
       >
         <ResultListSkeleton totalNum={DEFAULT_PER_PAGE} />
       </List>
@@ -129,6 +130,7 @@ export default function ResultList({
           marginBottom: "20px",
         }}
         dense
+        data-cy="result-list"
       >
         {users.items.map((user) => {
           return (
