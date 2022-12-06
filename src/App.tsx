@@ -49,10 +49,7 @@ export default function App() {
       }}
     >
       <SCWrapper elevation={6}>
-        <Box
-          sx={{ marginBottom: "20px", textAlign: "center" }}
-          component="header"
-        >
+        <SCHeader>
           <Typography
             variant="h4"
             component="h1"
@@ -63,7 +60,7 @@ export default function App() {
             GitUser Search
           </Typography>
           <SCLogo src={gitHubLogo} alt="GitHub Octocat" data-cy="header-logo" />
-        </Box>
+        </SCHeader>
         <Divider
           variant="fullWidth"
           orientation="vertical"
@@ -106,16 +103,31 @@ export default function App() {
 }
 
 const SCWrapper = styled(Paper)`
-  min-height: 60vh;
   padding: 45px 35px 25px 35px;
-  margin-bottom: 25px;
+  margin: 25px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 
   @media screen and (min-width: 1200px) {
-    display: flex;
     align-items: center;
+    flex-direction: row;
     justify-content: space-around;
+    gap: 35px;
   }
 ` as typeof Paper;
+
+const SCHeader = styled.header`
+  margin-bottom: 20px;
+  text-align: center;
+
+  @media screen and (min-width: 1200px) {
+    flex: 1 1 0;
+    h1 {
+      font-size: 2rem;
+    }
+  }
+`;
 
 const SCLogo = styled.img`
   max-width: 100%;
@@ -123,15 +135,27 @@ const SCLogo = styled.img`
 `;
 
 const SCPlaceholderImage = styled(SCLogo)`
-  max-height: 50vh;
+  max-height: 40vh;
   border-radius: 8px;
   margin: 25px 0;
   box-shadow: rgba(136, 165, 191, 0.48) 6px 2px 16px 0px,
     rgba(255, 255, 255, 0.8) -6px -2px 16px 0px;
+
+  @media screen and (max-width: 1200px) and (max-height: 1100px) {
+    display: none;
+  }
+
+  @media screen and (min-width: 1200px) and (max-height: 650px) {
+    display: none;
+  }
 `;
 
 const SCMain = styled.main`
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  @media screen and (min-width: 1200px) {
+    flex: 3 1 0;
+  }
 `;
