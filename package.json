@@ -22,6 +22,10 @@
     "start": "craco start",
     "build": "craco build",
     "test": "craco test",
+    "cy:open": "cypress open --e2e --browser chrome",
+    "cy:run": "cypress run --e2e --browser chrome",
+    "cy:open-ct": "cypress open --component --browser chrome",
+    "cy:run-ct": "cypress run --component --browser chrome",
     "eject": "react-scripts eject"
   },
   "browserslist": {
@@ -43,6 +47,7 @@
     "@types/react-dom": "latest",
     "@types/styled-components": "latest",
     "craco-alias": "^3.0.1",
+    "cypress": "^11.2.0",
     "typescript": "latest"
   }
 }
