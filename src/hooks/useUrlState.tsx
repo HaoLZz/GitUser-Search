@@ -11,7 +11,8 @@ export default function useUrlState() {
   const [searchParams, updateSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const location = useLocation();
-  // Derived states from URL
+
+  // Derived states from URL: /search/*?page=<pageIndex>&totalPages=<totalPages>?type=<searchType>
   const query = params["*"] ? params["*"]?.split("/")[0] : "";
   const pageIndexStr = searchParams.get("page");
   const totalPagesStr = searchParams.get("totalPages");
@@ -52,6 +53,12 @@ export default function useUrlState() {
   };
 }
 
+/**
+ * Convert string in URL to number
+ * @param {string} str - A string to be converted.
+ * @param {number} fallback - A number to fallback to when converted number is invalid.
+ * @returns {number} Converted result as number.
+ */
 function parseUrlStrToNum(str: string, fallback?: number) {
   let resultNum = fallback ?? 1;
   const parsedNum = parseInt(str);
@@ -62,6 +69,12 @@ function parseUrlStrToNum(str: string, fallback?: number) {
   return resultNum;
 }
 
+/**
+ * Merge previous URLSearchParams with provided update object, will overwrite existing params and delete empty ones
+ * @param {string} prev - Previous URLSearchParams in string format.
+ * @param {object} update - A update object in { [key: string]: string } format.
+ * @returns {URLSearchParams} A new URLSearchParams with merged update.
+ */
 function mergeURLSearchParams(prev: string, update: { [key: string]: string }) {
   const urlSearchParams = new URLSearchParams(prev);
   Object.keys(update).forEach((key) => {

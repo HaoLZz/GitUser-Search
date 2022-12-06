@@ -11,6 +11,7 @@ import useUrlState from "../hooks/useUrlState";
 import gitHubMarks from "../assets/images/GitHub-Marks.png";
 
 function ErrorMessage({ query }: { query: string }) {
+  // When user clicks `Retry` button manually trigger a fetch from SWR
   const { mutate: refetch } = useSWRConfig();
   return (
     <SCMessage>
@@ -59,6 +60,7 @@ export default function ResultList({
   pageIndex,
   shouldFetch,
 }: ResultListProps) {
+  // States in URL
   const { query, searchType, updateUrlState } = useUrlState();
 
   // Guard against invalid pageIndex
@@ -73,7 +75,7 @@ export default function ResultList({
 
   const { data: users, isLoading, isError } = useFetch(queryString);
 
-  // after data fetching, if total_count changes, then update totalPages state in App
+  // after data fetching, if total_count changes, then update totalPages state
   useEffect(() => {
     if (!!users && users.total_count >= 0) {
       const totalPageCount = Math.min(
