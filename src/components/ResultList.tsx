@@ -14,7 +14,7 @@ function ErrorMessage({ query }: { query: string }) {
   // When user clicks `Retry` button manually trigger a fetch from SWR
   const { mutate: refetch } = useSWRConfig();
   return (
-    <SCMessage>
+    <SCMessage data-cy="result-error">
       <Typography
         variant="h5"
         component="h6"
@@ -35,7 +35,7 @@ function ErrorMessage({ query }: { query: string }) {
 
 function EmptyResultMessage() {
   return (
-    <SCMessage>
+    <SCMessage data-cy="result-not-found">
       <Typography
         variant="h5"
         component="h6"

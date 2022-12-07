@@ -10,7 +10,7 @@ import { User } from "../interface/data";
 
 export default function ResultListItem({ user }: { user: User }) {
   return (
-    <ListItem alignItems="flex-start">
+    <ListItem alignItems="flex-start" data-cy="result-list-item">
       <ListItemButton>
         <ListItemAvatar>
           <Avatar src={user.avatar_url} alt={`github user avatar`} />

@@ -1,0 +1,48 @@
+{
+  "total_count": 2,
+  "incomplete_results": false,
+  "items": [
+    {
+      "login": "HaoLZz",
+      "id": 38929940,
+      "node_id": "MDQ6VXNlcjM4OTI5OTQw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/38929940?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/HaoLZz",
+      "html_url": "https://github.com/HaoLZz",
+      "followers_url": "https://api.github.com/users/HaoLZz/followers",
+      "following_url": "https://api.github.com/users/HaoLZz/following{/other_user}",
+      "gists_url": "https://api.github.com/users/HaoLZz/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/HaoLZz/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/HaoLZz/subscriptions",
+      "organizations_url": "https://api.github.com/users/HaoLZz/orgs",
+      "repos_url": "https://api.github.com/users/HaoLZz/repos",
+      "events_url": "https://api.github.com/users/HaoLZz/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/HaoLZz/received_events",
+      "type": "User",
+      "site_admin": false,
+      "score": 1.0
+    },
+    {
+      "login": "haolzzz",
+      "id": 39449121,
+      "node_id": "MDQ6VXNlcjM5NDQ5MTIx",
+      "avatar_url": "https://avatars.githubusercontent.com/u/39449121?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/haolzzz",
+      "html_url": "https://github.com/haolzzz",
+      "followers_url": "https://api.github.com/users/haolzzz/followers",
+      "following_url": "https://api.github.com/users/haolzzz/following{/other_user}",
+      "gists_url": "https://api.github.com/users/haolzzz/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/haolzzz/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/haolzzz/subscriptions",
+      "organizations_url": "https://api.github.com/users/haolzzz/orgs",
+      "repos_url": "https://api.github.com/users/haolzzz/repos",
+      "events_url": "https://api.github.com/users/haolzzz/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/haolzzz/received_events",
+      "type": "User",
+      "site_admin": false,
+      "score": 1.0
+    }
+  ]
+}
