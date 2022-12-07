@@ -20,7 +20,11 @@ export default function SearchBar({ setShouldFetch }: SearchBarProps) {
   const [errorMsg, setErrorMsg] = useState("");
 
   const handleSearchTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    updateUrlState(e.target.value, { page: "", totalPages: "", type: "" });
+    updateUrlState(
+      e.target.value,
+      { page: "", totalPages: "", type: "" },
+      true
+    );
     setErrorMsg("");
     setShouldFetch(false);
   };
@@ -39,7 +43,7 @@ export default function SearchBar({ setShouldFetch }: SearchBarProps) {
       setErrorMsg("Please select a search type below");
     } else {
       // Trigger data fetching and reset page index
-      updateUrlState(undefined, { page: "1", type: searchType });
+      updateUrlState(searchText, { page: "1", type: searchType });
       setShouldFetch(true);
     }
   };

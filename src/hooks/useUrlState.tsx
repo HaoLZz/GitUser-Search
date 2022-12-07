@@ -22,17 +22,21 @@ export default function useUrlState() {
 
   const updateUrlState = (
     query?: string,
-    searchParams?: { [key: string]: string }
+    searchParams?: { [key: string]: string },
+    replace?: boolean
   ) => {
     if (query === undefined && searchParams === undefined) return;
     if (query === undefined && searchParams !== undefined) {
-      updateSearchParams((prev) => {
-        return mergeURLSearchParams(prev.toString(), searchParams);
-      });
+      updateSearchParams(
+        (prev) => {
+          return mergeURLSearchParams(prev.toString(), searchParams);
+        },
+        { replace: !!replace }
+      );
     }
     if (query !== undefined && searchParams === undefined) {
       const targetUrl = `/search/${query}${location.search}`;
-      navigate(targetUrl);
+      navigate(targetUrl, { replace: !!replace });
     }
     if (query !== undefined && searchParams !== undefined) {
       const newSearchParams = mergeURLSearchParams(
@@ -40,7 +44,7 @@ export default function useUrlState() {
         searchParams
       );
       const targetUrl = `/search/${query}?${newSearchParams.toString()}`;
-      navigate(targetUrl);
+      navigate(targetUrl, { replace: !!replace });
     }
   };
 

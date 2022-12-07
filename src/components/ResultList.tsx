@@ -82,7 +82,7 @@ export default function ResultList({
         Math.ceil((users.total_count || 1) / DEFAULT_PER_PAGE),
         MAXIMUM_PAGE_INDEX
       );
-      updateUrlState(undefined, { totalPages: String(totalPageCount) });
+      updateUrlState(undefined, { totalPages: String(totalPageCount) }, true);
     }
   }, [users?.total_count]);
 
