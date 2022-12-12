@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { Container, Typography, Box, Paper, Divider } from "@mui/material";
+import { SWRConfig } from "swr";
 import Link from "@mui/material/Link";
 import Pagination from "@mui/material/Pagination";
 import SearchBar from "./components/SearchBar";
 import ResultList from "./components/ResultList";
 import useUrlState from "./hooks/useUrlState";
 import styled from "styled-components";
+import { isResponseError, isErrorWithMessage } from "./utils/helper";
+import SnackbarMessage from "./components/SnackbarMessage";
 import gitHubLogo from "./assets/images/Octocat.jpg";
 import placeholderImage from "./assets/images/placeholder.jpg";
 
@@ -27,6 +30,8 @@ export default function App() {
   const { pageIndex, totalPages, updateUrlState } = useUrlState();
 
   const [shouldFetch, setShouldFetch] = useState(false);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
@@ -39,66 +44,97 @@ export default function App() {
   };
 
   return (
-    <Container
-      maxWidth="lg"
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        height: "100vh",
+    <SWRConfig
+      value={{
+        onError: (error, key) => {
+          if (isResponseError(error)) {
+            // report fetcher related errors
+            setOpenSnackbar(true);
+            setErrorMsg(
+              error.status === 403
+                ? "GitHub search API rate limit reached! Please try again later."
+                : error.info
+            );
+          } else if (isErrorWithMessage(error)) {
+            // report non-fetcher related errors
+            setOpenSnackbar(true);
+            setErrorMsg(error.message);
+          }
+        },
       }}
     >
-      <SCWrapper elevation={6}>
-        <SCHeader>
-          <Typography
-            variant="h4"
-            component="h1"
-            sx={{ fontSize: { xs: "1.5rem", sm: "1.8rem", md: "2.5rem" } }}
-            gutterBottom
-            data-cy="header-text"
-          >
-            GitUser Search
-          </Typography>
-          <SCLogo src={gitHubLogo} alt="GitHub Octocat" data-cy="header-logo" />
-        </SCHeader>
-        <Divider
-          variant="fullWidth"
-          orientation="vertical"
-          flexItem
-          sx={{ display: { xs: "none", lg: "initial" } }}
-        />
-        <SCMain>
-          <SearchBar setShouldFetch={setShouldFetch} />
-          {!shouldFetch ? (
+      <Container
+        maxWidth="lg"
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          height: "100vh",
+        }}
+      >
+        <SCWrapper elevation={6}>
+          <SCHeader>
+            <Typography
+              variant="h4"
+              component="h1"
+              sx={{ fontSize: { xs: "1.5rem", sm: "1.8rem", md: "2.5rem" } }}
+              gutterBottom
+              data-cy="header-text"
+            >
+              GitUser Search
+            </Typography>
+            <SCLogo
+              src={gitHubLogo}
+              alt="GitHub Octocat"
+              data-cy="header-logo"
+            />
+          </SCHeader>
+          <Divider
+            variant="fullWidth"
+            orientation="vertical"
+            flexItem
+            sx={{ display: { xs: "none", lg: "initial" } }}
+          />
+          <SCMain>
+            <SearchBar setShouldFetch={setShouldFetch} />
             <SCPlaceholderImage
               src={placeholderImage}
-              alt="placeholder image"
+              alt=""
               data-cy="placeholder-image"
+              hidden={shouldFetch}
+              role="presentation"
             />
-          ) : (
-            <>
-              <ResultList pageIndex={pageIndex} shouldFetch={shouldFetch} />
-              <Pagination
-                count={totalPages}
-                page={pageIndex}
-                onChange={handlePageChange}
-                variant="outlined"
-                color="primary"
-              />
-              <Box sx={{ display: "none" }}>
-                <ResultList
-                  pageIndex={pageIndex + 1}
-                  shouldFetch={shouldFetch}
+            {shouldFetch && (
+              <>
+                <ResultList pageIndex={pageIndex} shouldFetch={shouldFetch} />
+                <Pagination
+                  count={totalPages}
+                  page={pageIndex}
+                  onChange={handlePageChange}
+                  variant="outlined"
+                  color="primary"
                 />
-              </Box>
-            </>
-          )}
-        </SCMain>
-      </SCWrapper>
-      <footer data-cy="search-footer">
-        <Copyright />
-      </footer>
-    </Container>
+                <Box sx={{ display: "none" }}>
+                  <ResultList
+                    pageIndex={pageIndex + 1}
+                    shouldFetch={shouldFetch}
+                  />
+                </Box>
+              </>
+            )}
+          </SCMain>
+        </SCWrapper>
+        <footer data-cy="search-footer">
+          <Copyright />
+        </footer>
+        <SnackbarMessage
+          open={openSnackbar}
+          text={errorMsg}
+          severity="error"
+          setOpen={setOpenSnackbar}
+        />
+      </Container>
+    </SWRConfig>
   );
 }
 

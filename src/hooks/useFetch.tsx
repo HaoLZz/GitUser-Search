@@ -25,6 +25,7 @@ export default function useFetch(queryString: string) {
     ResponseError
   >(() => (queryString ? queryString : null), fetcher, {
     revalidateIfStale: false,
+    shouldRetryOnError: false,
   });
 
   return {
