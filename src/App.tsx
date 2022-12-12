@@ -52,7 +52,7 @@ export default function App() {
             setOpenSnackbar(true);
             setErrorMsg(
               error.status === 403
-                ? "GitHub search API rate limit reached!"
+                ? "GitHub search API rate limit reached! Please try again later."
                 : error.info
             );
           } else if (isErrorWithMessage(error)) {
