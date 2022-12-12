@@ -97,13 +97,14 @@ export default function App() {
           />
           <SCMain>
             <SearchBar setShouldFetch={setShouldFetch} />
-            {!shouldFetch ? (
-              <SCPlaceholderImage
-                src={placeholderImage}
-                alt="placeholder image"
-                data-cy="placeholder-image"
-              />
-            ) : (
+            <SCPlaceholderImage
+              src={placeholderImage}
+              alt=""
+              data-cy="placeholder-image"
+              hidden={shouldFetch}
+              role="presentation"
+            />
+            {shouldFetch && (
               <>
                 <ResultList pageIndex={pageIndex} shouldFetch={shouldFetch} />
                 <Pagination
